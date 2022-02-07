@@ -21,8 +21,8 @@
 : "${EGERIA_SERVER:=mdsrv}"
 : "${VIEW_SERVER:=viewsrv}"
 : "${INT_SERVER:=intsrv}"
-: "${PG_USER:=jonesn}"
-: "${PG_PASS:=science}"
+: "${PG_USER:=USER}"
+: "${PG_PASS:=PASS}"
 : "${PG_URL:=jdbc:postgresql://localhost:5432/employees}"
 
 # Any extra flags for curl, ie --verbose
@@ -267,25 +267,25 @@ echo -e '\n\n > configuring Postgres integration:\n'
 curl -f -k -i ${EXTRA_FLAGS} --basic admin:admin -X POST "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${INT_SERVER}/integration-services/database-integrator" \
   --header 'Content-Type: application/json' \
   --data @- << EOF
-  { 
+  {
     "class": "IntegrationServiceRequestBody",
     "omagserverPlatformRootURL": "${EGERIA_ENDPOINT}",
     "omagserverName" : "${EGERIA_SERVER}",
-    "integrationConnectorConfigs" : 
-    [ 
+    "integrationConnectorConfigs" :
+    [
       {
         "class": "IntegrationConnectorConfig",
         "connectorName": "postgresql",
         "connectorUserId": "${EGERIA_USER}",
-        "connection": 
-        { 
+        "connection":
+        {
           "class": "Connection",
           "userId": "${PG_USER}",
           "clearPassword": "${PG_PASS}",
           "connectorType":
           {
             "class": "ConnectorType",
-            "connectorProviderClassName": "org.odpi.openmetadata.adapters.connectors.integration.postgres.PostgresDatabaseProvider"  
+            "connectorProviderClassName": "org.odpi.openmetadata.adapters.connectors.integration.postgres.PostgresDatabaseProvider"
           },
           "endpoint":
           {
@@ -303,7 +303,7 @@ curl -f -k -i ${EXTRA_FLAGS} --basic admin:admin -X POST "${EGERIA_ENDPOINT}/ope
           }
         },
         "metadataSourceQualifiedName": "postgreshostserver",
-        "refreshTimeInterval": "3456", 
+        "refreshTimeInterval": "3456",
         "usesBlockingCalls": "false",
         "permittedSynchronization": "FROM_THIRD_PARTY"
       }
