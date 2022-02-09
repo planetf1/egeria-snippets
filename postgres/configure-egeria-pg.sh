@@ -56,7 +56,8 @@ curl -f -k ${EXTRA_FLAGS} --basic admin:admin -X POST \
 echo -e '\n\n > Use local graph repo:\n'
 
 curl -f -k ${EXTRA_FLAGS} --basic admin:admin -X POST \
-  "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${EGERIA_SERVER}/local-repository/mode/local-graph-repository"
+  "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${EGERIA_SERVER}/local-repository/mode/in-memory-repository"
+  #"${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${EGERIA_SERVER}/local-repository/mode/local-graph-repository"
 
 # Configure the cohort membership
 echo -e '\n\n > configuring cohort membership:\n'
