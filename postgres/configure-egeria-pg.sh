@@ -26,89 +26,89 @@
 : "${PG_URL:=jdbc:postgresql://localhost:5432/employees}"
 
 # Any extra flags for curl, ie --verbose
-EXTRA_FLAGS=""
+EXTRA_FLAGS="-s"
 
 echo '-- Environment variables --'
 env
 echo '-- End of Environment variables --'
 
-echo -e '\n-- Configuring platform with requires servers'
+echo '\n-- Configuring platform with required servers'
 # Set the URL root
-echo -e '\n\n > Setting server URL root:\n'
-curl -f -k ${EXTRA_FLAGS} --basic admin:admin -X POST \
+echo '\n\n > Setting server URL root:\n'
+curl -f -k ${EXTRA_FLAGS} POST \
   "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${EGERIA_SERVER}/server-url-root?url=${EGERIA_ENDPOINT}"
 
 # Setup the event bus
-echo -e '\n\n > Setting up event bus:\n'
+echo '\n\n > Setting up event bus:\n'
 
-curl -f -k ${EXTRA_FLAGS} --basic admin:admin \
+curl -f -k ${EXTRA_FLAGS} \
   --header "Content-Type: application/json" \
-  "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${EGERIA_SERVER}/event-bus" \
+  ""${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${EGERIA_SERVER}/event-bus"" \
   --data '{"producer": {"bootstrap.servers": "'"${KAFKA_ENDPOINT}"'"}, "consumer": {"bootstrap.servers": "'"${KAFKA_ENDPOINT}"'"} }'
 
 # Enable all the access services (we will adjust this later)
-echo -e '\n\n > Enabling all access servces:\n'
+echo '\n\n > Enabling all access servces:\n'
 
-curl -f -k ${EXTRA_FLAGS} --basic admin:admin -X POST \
+curl -f -k ${EXTRA_FLAGS} -X POST \
   "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${EGERIA_SERVER}/access-services?serviceMode=ENABLED"
 
 # Use a local graph repo
-echo -e '\n\n > Use local graph repo:\n'
+echo '\n\n > Use local graph repo:\n'
 
-curl -f -k ${EXTRA_FLAGS} --basic admin:admin -X POST \
+curl -f -k ${EXTRA_FLAGS} -X POST \
   "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${EGERIA_SERVER}/local-repository/mode/in-memory-repository"
   #"${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${EGERIA_SERVER}/local-repository/mode/local-graph-repository"
 
 # Configure the cohort membership
-echo -e '\n\n > configuring cohort membership:\n'
+echo '\n\n > configuring cohort membership:\n'
 
-curl -f -k ${EXTRA_FLAGS} --basic admin:admin -X POST \
+curl -f -k ${EXTRA_FLAGS} -X POST \
   "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${EGERIA_SERVER}/cohorts/${EGERIA_COHORT}"
 
 # Start up the server
-echo -e '\n\n > Starting the server:\n'
+echo '\n\n > Starting the server:\n'
 
-curl -f -k ${EXTRA_FLAGS} --basic admin:admin -X POST --max-time 900 \
+curl -f -k ${EXTRA_FLAGS} -X POST --max-time 900 \
                 "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${EGERIA_SERVER}/instance"
 
 # --- Now the view server
 
 # Set the URL root
-echo -e '\n\n > Setting view server URL root:\n'
-curl -f -k ${EXTRA_FLAGS} --basic admin:admin -X POST \
+echo '\n\n > Setting view server URL root:\n'
+curl -f -k ${EXTRA_FLAGS} -X POST \
   "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${VIEW_SERVER}/server-url-root?url=${EGERIA_ENDPOINT}"
 
 # Setup the event bus
-echo -e '\n\n > Setting up event bus:\n'
+echo '\n\n > Setting up event bus:\n'
 
-curl -f -k ${EXTRA_FLAGS} --basic admin:admin \
+curl -f -k ${EXTRA_FLAGS} \
   --header "Content-Type: application/json" \
   "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${VIEW_SERVER}/event-bus" \
   --data '{"producer": {"bootstrap.servers": "'"${KAFKA_ENDPOINT}"'"}, "consumer": {"bootstrap.servers": "'"${KAFKA_ENDPOINT}"'"} }'
 
 # Set as view server
-echo -e '\n\n > Set as view server:\n'
+echo '\n\n > Set as view server:\n'
 
-curl -f -k ${EXTRA_FLAGS} --basic admin:admin -X POST \
+curl -f -k ${EXTRA_FLAGS} -X POST \
   "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${VIEW_SERVER}/server-type?typeName=View%20Server"
 
 # Setup a default audit log
-echo -e '\n\n > setup default audit log:\n'
+echo '\n\n > setup default audit log:\n'
 
-curl -f -k ${EXTRA_FLAGS} --basic admin:admin -X POST \
+curl -f -k ${EXTRA_FLAGS} -X POST \
   "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${VIEW_SERVER}/audit-log-destinations/default"
 
 
 # Configure the view server cohort membership
-#echo -e '\n\n > configuring cohort membership:\n'
+#echo '\n\n > configuring cohort membership:\n'
 
-#curl -f -k ${EXTRA_FLAGS} --basic admin:admin -X POST \
+#curl -f -k ${EXTRA_FLAGS} -X POST \
 #  "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${VIEW_SERVER}/cohorts/${EGERIA_COHORT}"
 
 # Configure the view services
-echo -e '\n\n > Setting up Glossary Author:\n'
+echo '\n\n > Setting up Glossary Author:\n'
 
- curl -f -k ${EXTRA_FLAGS} --basic admin:admin \
+ curl -f -k ${EXTRA_FLAGS} \
    --header "Content-Type: application/json" \
    "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${VIEW_SERVER}/view-services/glossary-author" \
    --data @- <<EOF
@@ -119,9 +119,9 @@ echo -e '\n\n > Setting up Glossary Author:\n'
 }
 EOF
 
-echo -e '\n\n > Setting up TEX:\n'
+echo '\n\n > Setting up TEX:\n'
 
-curl -f -k ${EXTRA_FLAGS} --basic admin:admin \
+curl -f -k ${EXTRA_FLAGS} \
   --header "Content-Type: application/json" \
   "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${VIEW_SERVER}/view-services/tex" \
   --data @- <<EOF
@@ -152,9 +152,9 @@ curl -f -k ${EXTRA_FLAGS} --basic admin:admin \
 }
 EOF
 
-echo -e '\n\n > Setting up REX:\n'
+echo '\n\n > Setting up REX:\n'
 
-curl -f -k ${EXTRA_FLAGS} --basic admin:admin \
+curl -f -k ${EXTRA_FLAGS} \
   --header "Content-Type: application/json" \
   "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${VIEW_SERVER}/view-services/rex" \
   --data @- <<EOF
@@ -185,9 +185,9 @@ curl -f -k ${EXTRA_FLAGS} --basic admin:admin \
 }
 EOF
 
-echo -e '\n\n > Setting up DINO:\n'
+echo '\n\n > Setting up DINO:\n'
 
-curl -f -k ${EXTRA_FLAGS} --basic admin:admin \
+curl -f -k ${EXTRA_FLAGS} \
   --header "Content-Type: application/json" \
   "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${VIEW_SERVER}/view-services/dino" \
   --data @- <<EOF
@@ -226,9 +226,9 @@ curl -f -k ${EXTRA_FLAGS} --basic admin:admin \
 }
 EOF
 
-echo -e '\n\n > Setting up Server Author:\n'
+echo '\n\n > Setting up Server Author:\n'
 
-curl -f -k ${EXTRA_FLAGS} --basic admin:admin \
+curl -f -k ${EXTRA_FLAGS} \
   --header "Content-Type: application/json" \
   "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${VIEW_SERVER}/view-services/server-author" \
   --data @- <<EOF
@@ -251,21 +251,21 @@ curl -f -k ${EXTRA_FLAGS} --basic admin:admin \
 EOF
 
 # Start up the view server
-echo -e '\n\n > Starting the view server:\n'
+echo '\n\n > Starting the view server:\n'
 
-curl -f -k ${EXTRA_FLAGS} --basic admin:admin -X POST --max-time 900 \
+curl -f -k ${EXTRA_FLAGS} -X POST --max-time 900 \
                 "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${VIEW_SERVER}/instance"
 
 # Setup the integration server
 
-echo -e '\n\n > Setting server URL root:\n'
-curl -f -k ${EXTRA_FLAGS} --basic admin:admin -X POST \
+echo '\n\n > Setting server URL root:\n'
+curl -f -k ${EXTRA_FLAGS} -X POST \
   "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${INT_SERVER}/server-url-root?url=${EGERIA_ENDPOINT}"
 
 
-echo -e '\n\n > configuring Postgres integration:\n'
+echo '\n\n > configuring Postgres integration:\n'
 
-curl -f -k -i ${EXTRA_FLAGS} --basic admin:admin -X POST "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${INT_SERVER}/integration-services/database-integrator" \
+curl -f -k -i ${EXTRA_FLAGS} -X POST "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${INT_SERVER}/integration-services/database-integrator" \
   --header 'Content-Type: application/json' \
   --data @- << EOF
   {
@@ -313,15 +313,15 @@ curl -f -k -i ${EXTRA_FLAGS} --basic admin:admin -X POST "${EGERIA_ENDPOINT}/ope
 EOF
 
 # Setup a default audit log
-echo -e '\n\n > setup default audit log:\n'
+echo '\n\n > setup default audit log:\n'
 
-curl -f -k ${EXTRA_FLAGS} --basic admin:admin -X POST \
+curl -f -k ${EXTRA_FLAGS} -X POST \
   "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${INT_SERVER}/audit-log-destinations/default"
 
 # Start up the server
-echo -e '\n\n > Starting the server:\n'
+echo '\n\n > Starting the server:\n'
 
-curl -f -k ${EXTRA_FLAGS} --basic admin:admin -X POST --max-time 900 \
+curl -f -k ${EXTRA_FLAGS} -X POST --max-time 900 \
   "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${INT_SERVER}/instance"
 
 echo '\n\n -> Dumping out server config'
@@ -336,10 +336,10 @@ do
   echo "\n\n -> ${server}"
   if [ $FORMAT -eq 1 ]
   then
-    curl -f -k ${EXTRA_FLAGS} --basic admin:admin -X GET \
+    curl -f -k ${EXTRA_FLAGS} -X GET \
       "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${server}/instance/configuration" | jsonpp
   else
-      curl -f -k ${EXTRA_FLAGS} --basic admin:admin -X GET \
+      curl -f -k ${EXTRA_FLAGS} -X GET \
       "${EGERIA_ENDPOINT}/open-metadata/admin-services/users/${EGERIA_USER}/servers/${server}/instance/configuration"
   fi
 done
