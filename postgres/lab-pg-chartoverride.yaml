@@ -1,0 +1,6 @@
+image:
+  egeria:
+    namespace: planetf1
+    registry: quay.io
+    name: egeria-database-connectors
+    tag: "3.5"
