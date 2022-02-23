@@ -1,0 +1,5 @@
+See https://github.com/rowanruseler/helm-charts/tree/master/charts/pgadmin4
+helm repo add runix https://helm.runix.net
+helm install pgadmin runix/pgadmin4 --set serviceAccount.create=true
+oc adm policy add-scc-to-user ibm-restricted-scc -z pgadmin-pgadmin4
+(in current namespace, using default deployment name)
