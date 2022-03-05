@@ -12,4 +12,5 @@ postgres-20220305a.ipynb
  - run the normal coco configure/start first, THEN run this notebook
  - data will be imported from postgres
 
-
+NOTE
+ - Intent is to add this into core egeria
