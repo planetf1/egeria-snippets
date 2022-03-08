@@ -1,0 +1,51 @@
+@startuml
+
+left to right direction
+
+
+'https://plantuml.com/object-diagram
+
+
+
+object id {
+  RelationalColumn
+  }
+
+object hire_date {
+  RelationalColumn
+  }
+
+object last_name {
+  RelationalColumn
+  }
+
+object first_name {
+  RelationalColumn
+  }
+
+object gender {
+   RelationalColumn
+   }
+
+object birth_date {
+   RelationalColumn
+   }
+
+object employees_employees_employees {
+  RelationalDBSchemaType
+  }
+
+object Employee {
+  RelationalTable
+  employees.employees.BASE.employee
+  }
+
+id --> Employee : NestedSchemaAttribute
+hire_date --> Employee : NestedSchemaAttribute
+last_name --> Employee : NestedSchemaAttribute
+first_name --> Employee : NestedSchemaAttribute
+gender --> Employee : NestedSchemaAttribute
+birth_date --> Employee : NestedSchemaAttribute
+employees_employees_employees --> Employee : AttributeForSchema
+
+@enduml
