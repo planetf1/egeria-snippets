@@ -1,6 +1,7 @@
 image:
   egeria:
-    namespace: planetf1
-    registry: quay.io
     name: egeria-database-connectors
-    tag: "3.5"
+egeria:
+  repositoryType: "in-memory-repository"
+persistence:
+  enabled: true
